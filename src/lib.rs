@@ -1,3 +1,1 @@
-
-pub mod color;
-pub mod mana;
+pub mod core;
