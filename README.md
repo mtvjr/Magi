@@ -1,6 +1,8 @@
 # Magi - A Magic The Gathering Library for Rust
 
-###Note: This library is a work in progress and may never reach a working or stable state.
+### Note: This library is a work in progress and may never reach a working or stable state.
+
+[![Build Status](https://travis-ci.com/mtvjr/magi.svg?branch=master)](https://travis-ci.com/mtvjr/magi)
 
 Magi is an attempt to implement a Magic the Gathering library for the rust programming language, while teaching me about
 the language at the same time. Eventually, if I am happy with the progress, I will try to make a server, a client API,
@@ -21,6 +23,8 @@ This project is developed in my free time, so updates may come irregularly, if a
 ## Not coming for a while
 * A playable game
 * Implemented cards
+* Server
+* Client
 
 ## How can you help
 
