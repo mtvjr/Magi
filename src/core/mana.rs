@@ -7,7 +7,7 @@ use strum::IntoEnumIterator;
 use crate::core::color::{Color, HasColor, Colors};
 
 #[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, Ord, PartialOrd)]
-pub enum Mana {
+pub enum ManaType {
     X,
     Snow,
     Generic(u16),
@@ -18,13 +18,13 @@ pub enum Mana {
     Colored(Color),
 }
 
-impl Mana {
+impl ManaType {
     pub fn to_string(self) -> String {
         format!("{{{}}}", self.to_symbolic())
     }
 
     fn to_symbolic(self) -> String {
-        use Mana::*;
+        use ManaType::*;
         match self {
             Colored(color) => color.symbol().to_string(),
             Colorless => String::from("C"),
@@ -38,7 +38,7 @@ impl Mana {
     }
 
     fn cmc(self) -> u16 {
-        use Mana::*;
+        use ManaType::*;
         match self {
             GenericHybrid(_c) => 2,
             Generic(val) => val,
@@ -48,15 +48,15 @@ impl Mana {
     }
 }
 
-impl HasColor for Mana {
+impl HasColor for ManaType {
     fn colors(&self) -> Colors {
         let mut colors = Colors::new();
 
         match self {
-            Mana::Colored(color) => {colors.insert(color.clone());},
-            Mana::Phyrexian(color) => {colors.insert(color.clone());},
-            Mana::GenericHybrid(color) => {colors.insert(color.clone());},
-            Mana::ColorHybrid(c1, c2) => {
+            ManaType::Colored(color) => {colors.insert(color.clone());},
+            ManaType::Phyrexian(color) => {colors.insert(color.clone());},
+            ManaType::GenericHybrid(color) => {colors.insert(color.clone());},
+            ManaType::ColorHybrid(c1, c2) => {
                 colors.insert(c1.clone());
                 colors.insert(c2.clone());
             }
@@ -67,7 +67,7 @@ impl HasColor for Mana {
     }
 }
 
-impl fmt::Display for Mana {
+impl fmt::Display for ManaType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.to_string())
     }
@@ -80,7 +80,7 @@ mod mana_test {
 
     #[test]
     fn color_test() {
-        use Mana::*;
+        use ManaType::*;
 
         let mut colored_mana = Vec::new();
         let mut phyrexian_mana = Vec::new();
@@ -163,7 +163,7 @@ mod mana_test {
 
     #[test]
     fn to_string() {
-        use Mana::*;
+        use ManaType::*;
 
         assert_eq!(Colored(White).to_string(), String::from("{W}"));
         assert_eq!(ColorHybrid(Blue, Green).to_string(), String::from("{U/G}"));
@@ -173,7 +173,7 @@ mod mana_test {
 
     #[test]
     fn cmc() {
-        use Mana::*;
+        use ManaType::*;
 
         assert_eq!(ColorHybrid(Blue, Black).cmc(), 1);
         assert_eq!(Colorless.cmc(), 1);
