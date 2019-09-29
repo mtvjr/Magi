@@ -6,23 +6,34 @@ use strum::IntoEnumIterator;
 
 use crate::core::color::{Color, HasColor, Colors};
 
+/// ManaType is used to represent a single type of Mana
 #[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, Ord, PartialOrd)]
 pub enum ManaType {
+    /// X is used to represent a variable amount of mana, chosen by the player
     X,
+    /// Snow is any mana generated from a Snow permanent
     Snow,
+    /// Generic(num) mana requires num mana of any color to be paid
     Generic(u16),
+    /// Colorless mana must be paid with mana without color
     Colorless,
+    /// Phyrexian may be paid with the color of mana, or by paying 2 life
     Phyrexian(Color),
+    /// Generic hybrid mana may be paid with 2 generic mana, or with the color
     GenericHybrid(Color),
+    /// Color hybrid mana may be paid with either of the two given colors
     ColorHybrid(Color, Color),
+    /// Colored mana must be paid with mana of the given color
     Colored(Color),
 }
 
 impl ManaType {
+    /// Formats the mana to the standard format. Eg White mana will be represented as {W}
     pub fn to_string(self) -> String {
         format!("{{{}}}", self.to_symbolic())
     }
 
+    // A helper function used to resolve the symbol in the to_string function
     fn to_symbolic(self) -> String {
         use ManaType::*;
         match self {
@@ -37,7 +48,8 @@ impl ManaType {
         }
     }
 
-    fn cmc(self) -> u16 {
+    /// Returns the converted mana cost value of the mana element
+    pub fn cmc(self) -> u16 {
         use ManaType::*;
         match self {
             GenericHybrid(_c) => 2,

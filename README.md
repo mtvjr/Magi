@@ -14,9 +14,9 @@ This project is developed in my free time, so updates may come irregularly, if a
 * An enum based Color System
 * An enum based Mana System
 * Tests for the above features
+* Documentation for the above features
 
 ## Upcoming features
-* Documentation of existing features
 * A mana cost and payment system
 * The start of a card type system
 

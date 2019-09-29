@@ -7,6 +7,8 @@ use std::collections::HashSet;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
+/// Color is one of the intrisic parts of the game of Magic. This enum is used to designate
+/// a single color.
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash, EnumIter, Ord, PartialOrd)]
 pub enum Color {
     White,
@@ -23,6 +25,7 @@ const RED_SYMBOL:   char = 'R';
 const GREEN_SYMBOL: char = 'G';
 
 impl Color {
+    /// Returns the letter used to represent the color
     pub fn symbol(self) -> char {
         use Color::*;
         match self {
@@ -34,6 +37,7 @@ impl Color {
         }
     }
 
+    /// Returns the color represented by a letter
     pub fn from_symbol(symbol: char) -> Option<Color> {
         use Color::*;
         match symbol {
@@ -47,29 +51,46 @@ impl Color {
     }
 }
 
+/// A collection of colors. The Colors type is an alias of std::collection::HashSet<Color>
+/// that implements the HasColor trait
 pub type Colors = HashSet<Color>;
 
+/// This trait should be implemented on any object that can be considered colored as it gives
+/// access to many common color checks that appear in the magic rules.
 pub trait HasColor {
+    /// The colors() method returns a set of colors that the implementor has. The set is a
+    /// std::collections::HashSet<Color> aliased to Colors.
     fn colors(&self) -> Colors;
 
+    /// The is_colored() method returns true if the object has at least one color.
     fn is_colored(&self) -> bool {
         !self.colors().is_empty()
     }
 
+    /// The is_colorless() method returns true if the object has no colors
     fn is_colorless(&self) -> bool {
         !self.is_colored()
     }
 
+    /// The is_multicolored() method returns true if the object has more than one color.
     fn is_multicolored(&self) -> bool {
         self.colors().len() > 1
     }
 
+    /// The is_multicolored() method returns true if the object has only one color.
     fn is_monocolored(&self) -> bool {
         self.colors().len() == 1
     }
 
+    /// The is_multicolored() method returns true if the object has the provided color
     fn is_color(&self, color: Color) -> bool {
         self.colors().contains(&color)
+    }
+}
+
+impl HasColor for Colors {
+    fn colors(&self) -> Colors {
+        return self.clone()
     }
 }
 
