@@ -2,9 +2,12 @@ use std::fmt;
 
 use std::collections::HashSet;
 
-#[derive(Debug)]
-#[derive(Eq, PartialEq)]
-#[derive(Copy, Clone, Hash)]
+// strum::IntoEnumIterator is required for EnumIter, but produces unused import warning
+#[allow(unused_imports)]
+use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
+
+#[derive(Debug, Eq, PartialEq, Copy, Clone, Hash, EnumIter, Ord, PartialOrd)]
 pub enum Color {
     White,
     Blue,
@@ -41,11 +44,6 @@ impl Color {
             GREEN_SYMBOL => Some(Green),
             _ => None
         }
-    }
-
-    pub fn colors() -> std::slice::Iter<'static, Color> {
-        use Color::*;
-        [White, Blue, Black, Red, Green].iter()
     }
 }
 
@@ -130,5 +128,38 @@ mod color_test {
         assert_eq!(Color::Black.symbol(), 'B');
         assert_eq!(Color::Red.symbol(), 'R');
         assert_eq!(Color::Green.symbol(), 'G');
+    }
+
+    #[test]
+    fn color_iter() {
+        let mut colors = Color::iter();
+
+        assert_eq!(colors.next().unwrap(), Color::White);
+        assert_eq!(colors.next().unwrap(), Color::Blue);
+        assert_eq!(colors.next().unwrap(), Color::Black);
+        assert_eq!(colors.next().unwrap(), Color::Red);
+        assert_eq!(colors.next().unwrap(), Color::Green);
+        assert_eq!(colors.next(), None);
+    }
+
+    #[test]
+    fn color_ord() {
+        assert_eq!(Color::White < Color::Blue, true);
+        assert_eq!(Color::Blue < Color::Black, true);
+        assert_eq!(Color::Black < Color::Red, true);
+        assert_eq!(Color::Red < Color::Green, true);
+        assert_eq!(Color::Green < Color::White, false);
+
+        assert_eq!(Color::White <= Color::Blue, true);
+        assert_eq!(Color::Blue <= Color::Black, true);
+        assert_eq!(Color::Black <= Color::Red, true);
+        assert_eq!(Color::Red <= Color::Green, true);
+        assert_eq!(Color::Green <= Color::White, false);
+
+        assert_eq!(Color::White == Color::White, true);
+        assert_eq!(Color::Blue == Color::Blue, true);
+        assert_eq!(Color::Black == Color::Black, true);
+        assert_eq!(Color::Red == Color::Red, true);
+        assert_eq!(Color::Green == Color::Green, true);
     }
 }

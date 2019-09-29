@@ -1,17 +1,21 @@
 use std::fmt;
 
+// strum::IntoEnumIterator is required for Color::iter(), but produces unused import warning
+#[allow(unused_imports)]
+use strum::IntoEnumIterator;
+
 use crate::core::color::{Color, HasColor, Colors};
 
-#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, Ord, PartialOrd)]
 pub enum Mana {
-    Colored(Color),
-    Colorless,
-    Generic(u16),
-    Snow,
     X,
+    Snow,
+    Generic(u16),
+    Colorless,
     Phyrexian(Color),
     GenericHybrid(Color),
     ColorHybrid(Color, Color),
+    Colored(Color),
 }
 
 impl Mana {
@@ -69,13 +73,6 @@ impl fmt::Display for Mana {
     }
 }
 
-#[derive(Debug)]
-pub enum ManaParseError {
-    NotProperlyFormed,
-    IllegalRepresentation,
-    TooManyMatches,
-}
-
 #[cfg(test)]
 mod mana_test {
     use super::*;
@@ -91,15 +88,15 @@ mod mana_test {
         let mut color_hybrid_mana = Vec::new();
         let mut generic_mana = Vec::new();
 
-        for color in Color::colors() {
-            colored_mana.push(Colored(*color));
-            phyrexian_mana.push(Phyrexian(*color));
-            generic_hybrid_mana.push(GenericHybrid(*color));
+        for color in Color::iter() {
+            colored_mana.push(Colored(color));
+            phyrexian_mana.push(Phyrexian(color));
+            generic_hybrid_mana.push(GenericHybrid(color));
 
-            for c2 in Color::colors() {
+            for c2 in Color::iter() {
                 if c2 != color
                 {
-                    color_hybrid_mana.push(ColorHybrid(*color, *c2));
+                    color_hybrid_mana.push(ColorHybrid(color, c2));
                 }
             }
         }
